@@ -1,17 +1,17 @@
 {-# LANGUAGE OverloadedStrings, ExtendedDefaultRules #-}
-module Mongo
-( initMongoCo
+module Mongo(
+initMongoCo
 , mongoRun
 , lookupData
-, lookupInt
 , valueToString
 , queryMetadataById
 , checkResponse
+, getString
+, getValue
 ) where
 
 import Database.MongoDB as MongoDB
 import Data.Maybe as Maybe
-import Data.String
 
 initMongoCo = runIOE $ MongoDB.connect $ MongoDB.host "127.0.0.1"
 
@@ -21,15 +21,18 @@ valueToString :: Maybe String -> String
 valueToString (Just a) = a
 valueToString Nothing = "Error xd"
 
+lookupData field doc = MongoDB.look field doc
 
-lookupData field doc = (MongoDB.look field doc >>=)
+getString :: Either String (Maybe String) -> String
+getString (Left error) = error
+getString (Right (Nothing)) = "Value error"
+getString (Right (Just value)) = value
 
-lookupInt :: a -> IO a
-lookupInt a = return a
-
-getValue :: Either String Document -> String
-getValue (Left error) = error
-getValue (Right document) =
+getValue :: (Val a) => Either String Document -> Label -> Either String (Maybe a)
+getValue (Left error) _ = Left error
+getValue (Right document) field = Right val where val = getval $ lookupData field document
+                                                  getval Nothing = Nothing
+                                                  getval (Just a) = MongoDB.cast' a
 
 queryMetadataById :: Integer -> IO (Either String Document)
 queryMetadataById id = do

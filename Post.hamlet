@@ -1,5 +1,4 @@
-<h1> #{title}
+#{title}
   #{author} #{date} #{tags}
 
-  #{corpus}
-
+  lol
