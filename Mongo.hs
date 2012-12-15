@@ -27,9 +27,8 @@ getString (Right (Just value)) = value
 
 getValue :: (Val a) => Either String Document -> Label -> Either String (Maybe a)
 getValue (Left error) _ = Left error
-getValue (Right document) field = Right val where val = getval $ MongoDB.look field document
-                                                  getval Nothing = Nothing
-                                                  getval (Just a) = MongoDB.cast' a
+getValue (Right document) field =
+  Right $ MongoDB.look field document >>= MongoDB.cast'
 
 queryMetadataById :: Integer -> IO (Either String Document)
 queryMetadataById id = do
