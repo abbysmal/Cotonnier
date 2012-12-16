@@ -27,7 +27,7 @@ getCotonsIdR id = do
       tags = Mongo.getString $ getValue metadatas "tags"
       date = Mongo.getString $ getValue  metadatas "date"
       title = Mongo.getString $ getValue  metadatas "title"
-      corpus = Markdown.markdownToHtml
+      corpus = Markdown.markdownToHtml corpusmd
   Yesod.defaultLayout $(Yesod.whamletFile "Post.hamlet")
 
 main :: IO ()
