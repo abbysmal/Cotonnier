@@ -3,13 +3,20 @@
 import Yesod as Yesod
 import Mongo as Mongo
 import Yesod.Markdown as Markdown
-
-mkYesod "Cotonnier" [parseRoutes|
-/ HomeR GET
-/#Integer CotonsIdR GET
-|]
+import Yesod.Static
 
 data Cotonnier = Cotonnier
+  {
+    getStatic	:: Static
+  }
+
+staticFiles "static"
+
+mkYesod "Cotonnier" [parseRoutesNoCheck|
+/ HomeR GET
+/#Integer CotonsIdR GET
+/static    StaticR Static getStatic
+|]
 
 instance Yesod Cotonnier
 
@@ -33,4 +40,6 @@ getCotonsIdR id = do
     $(Yesod.whamletFile "Post.hamlet")
 
 main :: IO ()
-main = Yesod.warpDebug 3000 Cotonnier
+main = do
+  static@ (Static settings) <- static "static"
+  Yesod.warpDebug 3000 $ Cotonnier static
