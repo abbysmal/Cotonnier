@@ -37,6 +37,7 @@ getCotonsIdR id = do
       corpus = Markdown.markdownToHtml corpusmd
   Yesod.defaultLayout $ do
     setTitle "Cotonnier"
+    addStylesheet $ StaticR knacss_css
     $(Yesod.whamletFile "Post.hamlet")
 
 main :: IO ()
