@@ -29,7 +29,7 @@ valueToString Nothing = "Error xd"
 getDate :: Either String (Maybe UTCTime) -> String
 getDate (Left error) = error
 getDate (Right Nothing) = "Value error"
-getDate (Right (Just date)) = Format.formatTime Locale.defaultTimeLocale "%c" date
+getDate (Right (Just date)) = Format.formatTime Locale.defaultTimeLocale "%A %e, %B %Y" date
 
 getString :: Either String (Maybe String) -> String
 getString (Left error) = error
