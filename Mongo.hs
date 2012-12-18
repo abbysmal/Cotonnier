@@ -7,10 +7,16 @@ initMongoCo
 , checkResponse
 , getString
 , getValue
+, getDate
+, getList
 ) where
 
 import Database.MongoDB as MongoDB
 import Data.Maybe as Maybe
+import Control.Monad.Trans (liftIO)
+import System.Locale as Locale
+import Data.Time
+import Data.Time.Format as Format
 
 initMongoCo = runIOE $ MongoDB.connect $ MongoDB.host "127.0.0.1"
 
@@ -20,10 +26,20 @@ valueToString :: Maybe String -> String
 valueToString (Just a) = a
 valueToString Nothing = "Error xd"
 
+getDate :: Either String (Maybe UTCTime) -> String
+getDate (Left error) = error
+getDate (Right Nothing) = "Value error"
+getDate (Right (Just date)) = Format.formatTime Locale.defaultTimeLocale "%c" date
+
 getString :: Either String (Maybe String) -> String
 getString (Left error) = error
 getString (Right Nothing) = "Value error"
 getString (Right (Just value)) = value
+
+getList :: Either String (Maybe [String]) -> [String]
+getList (Left error) = [error]
+getList (Right Nothing) = ["Value error"]
+getList (Right (Just list)) = list
 
 getValue :: (Val a) => Either String Document -> Label -> Either String (Maybe a)
 getValue (Left error) _ = Left error
@@ -37,7 +53,7 @@ queryMetadataById id = do
   let document = checkResponse response
   return document
 
-checkResponse :: Either Failure (Maybe Document) -> Either String Document
+checkResponse :: Val a => Either Failure (Maybe a) -> Either String a
 checkResponse (Left _) = Left "Error while querying MongoDB"
 checkResponse (Right Nothing) = Left "Querying return nothing"
-checkResponse (Right (Just document)) = Right document
+checkResponse (Right (Just a)) = Right a

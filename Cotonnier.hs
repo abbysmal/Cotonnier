@@ -4,12 +4,12 @@ import Yesod as Yesod
 import Mongo as Mongo
 import Yesod.Markdown as Markdown
 
-data Cotonnier = Cotonnier
-
 mkYesod "Cotonnier" [parseRoutes|
 / HomeR GET
 /#Integer CotonsIdR GET
 |]
+
+data Cotonnier = Cotonnier
 
 instance Yesod Cotonnier
 
@@ -24,11 +24,13 @@ getCotonsIdR id = do
   corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
   let metadatas = query
       author = Mongo.getString $ getValue metadatas "author"
-      tags = Mongo.getString $ getValue metadatas "tags"
-      date = Mongo.getString $ getValue  metadatas "date"
+      tags = Mongo.getList $ getValue metadatas "tags"
+      date = Mongo.getDate $ getValue  metadatas "date"
       title = Mongo.getString $ getValue  metadatas "title"
       corpus = Markdown.markdownToHtml corpusmd
-  Yesod.defaultLayout $(Yesod.whamletFile "Post.hamlet")
+  Yesod.defaultLayout $ do
+    setTitle "Cotonnier"
+    $(Yesod.whamletFile "Post.hamlet")
 
 main :: IO ()
 main = Yesod.warpDebug 3000 Cotonnier

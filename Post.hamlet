@@ -1,4 +1,11 @@
-#{title}
-  #{author} #{date} #{tags}
+<div class="post">
+  <h3>
+    #{title}
+  #{corpus}
+  <div>
+    Publié le #{date}, by #{author}
+    Tags:
+    $forall tag <- tags
+      #{tag}
 
-  lol
+
