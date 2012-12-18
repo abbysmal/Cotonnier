@@ -38,6 +38,7 @@ getCotonsIdR id = do
   Yesod.defaultLayout $ do
     setTitle "Cotonnier"
     addStylesheet $ StaticR knacss_css
+    addStylesheet $ StaticR cotonnier_css
     $(Yesod.whamletFile "Post.hamlet")
 
 main :: IO ()

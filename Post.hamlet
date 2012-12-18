@@ -1,11 +1,13 @@
-<div class="post">
-  <h3>
-    #{title}
-  #{corpus}
-  <div>
-    Publié le #{date}, by #{author}
-    Tags:
-    $forall tag <- tags
-      #{tag}
-
+<header>
+  Cotonnier blog
+  <div class="slogan">
+    Le blog trop bien
+<div class="line post">
+  <div class="mod left w33p">
+    #{corpus}
+    <div class="metadatas">
+      Published on #{date}, by #{author}
+      Tags:
+      $forall tag <- tags
+        #{tag}
 
