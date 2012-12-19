@@ -4,11 +4,13 @@ initMongoCo
 , mongoRun
 , valueToString
 , queryMetadataById
+, queryTenLastsDocuments
 , checkResponse
 , getString
 , getValue
 , getDate
 , getList
+, getId
 ) where
 
 import Database.MongoDB as MongoDB
@@ -25,6 +27,11 @@ mongoRun pipe = MongoDB.access pipe MongoDB.master "cotonnier"
 valueToString :: Maybe String -> String
 valueToString (Just a) = a
 valueToString Nothing = "Error xd"
+
+getId :: Either String (Maybe Integer) -> Maybe Integer
+getId (Left error) = Nothing
+getId (Right (Just a)) = Just a
+getId (Right Nothing) = Nothing
 
 getDate :: Either String (Maybe UTCTime) -> String
 getDate (Left error) = error
@@ -43,8 +50,7 @@ getList (Right (Just list)) = list
 
 getValue :: (Val a) => Either String Document -> Label -> Either String (Maybe a)
 getValue (Left error) _ = Left error
-getValue (Right document) field =
-  Right $ MongoDB.look field document >>= MongoDB.cast'
+getValue (Right document) field = Right $ MongoDB.look field document >>= MongoDB.cast'
 
 queryMetadataById :: Integer -> IO (Either String Document)
 queryMetadataById id = do
@@ -52,6 +58,11 @@ queryMetadataById id = do
   response <- mongoRun pipe $ MongoDB.findOne $ MongoDB.select ["id" =: id] "cotons"
   let document = checkResponse response
   return document
+
+queryTenLastsDocuments = do
+  pipe <- initMongoCo
+  response <- mongoRun pipe $ MongoDB.find (MongoDB.select [] "cotons") {limit = 10} >>= MongoDB.rest
+  return response
 
 checkResponse :: Val a => Either Failure (Maybe a) -> Either String a
 checkResponse (Left _) = Left "Error while querying MongoDB"

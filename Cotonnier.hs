@@ -23,7 +23,14 @@ instance Yesod Cotonnier
 getStaticArticle id = "/home/engil/static/" ++ (show id) ++ "/article.md"
 
 getHomeR :: Handler Yesod.RepHtml
-getHomeR = Yesod.defaultLayout [whamlet|Accueil|]
+getHomeR = do
+  entries <- Yesod.liftIO $ Mongo.queryTenLastsDocuments
+  Yesod.defaultLayout $ do
+    setTitle "Cotonnier"
+    addStylesheet $ StaticR knacss_css
+    addStylesheet $ StaticR cotonnier_css
+    $(Yesod.whamletFile "Home.hamlet")
+
 
 getCotonsIdR :: Integer -> Handler Yesod.RepHtml
 getCotonsIdR id = do
