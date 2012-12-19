@@ -1,5 +1,5 @@
 <header>
-  Cotonnier blog
+  <a href=@{HomeR}>Cotonnier blog
   <div class="slogan">
     Le blog trop bien
 <div class="line post">
@@ -8,10 +8,10 @@
         #{corpus}
       <div class="metadatas">
         $with date <- Mongo.getDate $ getValue metadatas "date"
-          Published on #{date}, by
+          Published on #{date}, by 
         $with author <- Mongo.getString $ getValue metadatas "author"
-          #{author}
-        Tags:
+          <a href=@{AuthorR author}>#{author} 
+        Tags: 
         $with tags <- Mongo.getList $ getValue metadatas "tags"
           $forall tag <- tags
-            #{tag}
+            <a href=@{TagsR tag}>#{tag}</a>

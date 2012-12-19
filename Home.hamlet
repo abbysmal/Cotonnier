@@ -1,5 +1,5 @@
 <header>
-  Cotonnier blog
+  <a href=@{HomeR}>Cotonnier blog
   <div class="slogan">
     Le blog trop bien
   <div class="listing">
@@ -12,12 +12,12 @@
                 #{title}
               <div class="lineinfo">
                 $with date <- Mongo.getDate $ Mongo.getValue (Right entry) "date"
-                  Published on #{date}
+                  Published on #{date} 
                 $with author <- Mongo.getString $ Mongo.getValue (Right entry) "author"
-                    by #{author}
+                    by <a href=@{AuthorR author}>#{author}</a> 
                 $with tags <- Mongo.getList $ Mongo.getValue (Right entry) "tags"
-                    Tags:
+                    Tags: 
                   $forall tag <- tags
-                      #{tag}
+                      <a href=@{TagsR tag}>#{tag}</a> 
       $of Left _
         <p>MongoDB error

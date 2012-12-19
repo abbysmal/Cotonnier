@@ -3,6 +3,7 @@
 import Yesod as Yesod
 import Mongo as Mongo
 import Yesod.Markdown as Markdown
+import Database.MongoDB as MongoDB
 import Yesod.Static
 
 data Cotonnier = Cotonnier
@@ -15,6 +16,8 @@ staticFiles "static"
 mkYesod "Cotonnier" [parseRoutesNoCheck|
 / HomeR GET
 /#Integer CotonsIdR GET
+/author/#String AuthorR GET
+/tags/#String TagsR GET
 /static    StaticR Static getStatic
 |]
 
@@ -24,23 +27,40 @@ getStaticArticle id = "/home/engil/static/" ++ (show id) ++ "/article.md"
 
 getHomeR :: Handler Yesod.RepHtml
 getHomeR = do
-  entries <- Yesod.liftIO $ Mongo.queryTenLastsDocuments
+  entries <- Yesod.liftIO $ Mongo.queryDocumentsWith [] 10
   Yesod.defaultLayout $ do
     setTitle "Cotonnier"
     addStylesheet $ StaticR knacss_css
     addStylesheet $ StaticR cotonnier_css
     $(Yesod.whamletFile "Home.hamlet")
 
-
 getCotonsIdR :: Integer -> Handler Yesod.RepHtml
 getCotonsIdR id = do
-  metadatas <- Yesod.liftIO $ Mongo.queryMetadataById id
+  metadatas <- Yesod.liftIO $ Mongo.queryDocumentWith ["id" =: id]
   corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
   Yesod.defaultLayout $ do
     setTitle "Cotonnier"
     addStylesheet $ StaticR knacss_css
     addStylesheet $ StaticR cotonnier_css
     $(Yesod.whamletFile "Post.hamlet")
+
+getAuthorR :: String -> Handler Yesod.RepHtml
+getAuthorR author = do
+  entries <- Yesod.liftIO $ queryDocumentsWith ["author" =: author] 0
+  Yesod.defaultLayout $ do
+  setTitle "Cotonnier"
+  addStylesheet $ StaticR knacss_css
+  addStylesheet $ StaticR cotonnier_css
+  $(Yesod.whamletFile "Home.hamlet")
+
+getTagsR :: String -> Handler Yesod.RepHtml
+getTagsR tag = do
+  entries <- Yesod.liftIO $ queryDocumentsWith ["tags" =: tag] 0
+  Yesod.defaultLayout $ do
+  setTitle "Cotonnier"
+  addStylesheet $ StaticR knacss_css
+  addStylesheet $ StaticR cotonnier_css
+  $(Yesod.whamletFile "Home.hamlet")
 
 main :: IO ()
 main = do

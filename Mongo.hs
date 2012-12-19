@@ -3,8 +3,8 @@ module Mongo(
 initMongoCo
 , mongoRun
 , valueToString
-, queryMetadataById
-, queryTenLastsDocuments
+, queryDocumentWith
+, queryDocumentsWith
 , checkResponse
 , getString
 , getValue
@@ -52,16 +52,16 @@ getValue :: (Val a) => Either String Document -> Label -> Either String (Maybe a
 getValue (Left error) _ = Left error
 getValue (Right document) field = Right $ MongoDB.look field document >>= MongoDB.cast'
 
-queryMetadataById :: Integer -> IO (Either String Document)
-queryMetadataById id = do
+queryDocumentWith :: Selector -> IO (Either String Document)
+queryDocumentWith query = do
   pipe <- initMongoCo
-  response <- mongoRun pipe $ MongoDB.findOne $ MongoDB.select ["id" =: id] "cotons"
+  response <- mongoRun pipe $ MongoDB.findOne $ MongoDB.select query "cotons"
   let document = checkResponse response
   return document
 
-queryTenLastsDocuments = do
+queryDocumentsWith query limitation = do
   pipe <- initMongoCo
-  response <- mongoRun pipe $ MongoDB.find (MongoDB.select [] "cotons") {limit = 10} >>= MongoDB.rest
+  response <- mongoRun pipe $ MongoDB.find (MongoDB.select query "cotons") {limit = limitation} >>= MongoDB.rest
   return response
 
 checkResponse :: Val a => Either Failure (Maybe a) -> Either String a
