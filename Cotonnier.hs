@@ -27,14 +27,8 @@ getHomeR = Yesod.defaultLayout [whamlet|Accueil|]
 
 getCotonsIdR :: Integer -> Handler Yesod.RepHtml
 getCotonsIdR id = do
-  query <- Yesod.liftIO $ Mongo.queryMetadataById id
+  metadatas <- Yesod.liftIO $ Mongo.queryMetadataById id
   corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
-  let metadatas = query
-      author = Mongo.getString $ getValue metadatas "author"
-      tags = Mongo.getList $ getValue metadatas "tags"
-      date = Mongo.getDate $ getValue  metadatas "date"
-      title = Mongo.getString $ getValue  metadatas "title"
-      corpus = Markdown.markdownToHtml corpusmd
   Yesod.defaultLayout $ do
     setTitle "Cotonnier"
     addStylesheet $ StaticR knacss_css

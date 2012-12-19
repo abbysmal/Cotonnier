@@ -3,11 +3,15 @@
   <div class="slogan">
     Le blog trop bien
 <div class="line post">
-  <div class="mod left w33p">
-    #{corpus}
-    <div class="metadatas">
-      Published on #{date}, by #{author}
-      Tags:
-      $forall tag <- tags
-        #{tag}
-
+    <div class="mod left w33p">
+      $with corpus <- Markdown.markdownToHtml corpusmd
+        #{corpus}
+      <div class="metadatas">
+        $with date <- Mongo.getDate $ getValue metadatas "date"
+          Published on #{date}, by
+        $with author <- Mongo.getString $ getValue metadatas "author"
+          #{author}
+        Tags:
+        $with tags <- Mongo.getList $ getValue metadatas "tags"
+          $forall tag <- tags
+            #{tag}
