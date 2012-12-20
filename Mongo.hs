@@ -28,10 +28,10 @@ valueToString :: Maybe String -> String
 valueToString (Just a) = a
 valueToString Nothing = "Error xd"
 
-getId :: Either String (Maybe Integer) -> Maybe Integer
-getId (Left error) = Nothing
-getId (Right (Just a)) = Just a
-getId (Right Nothing) = Nothing
+getId :: Either String (Maybe Integer) -> Integer
+getId (Left error) = 0
+getId (Right (Just a)) = a
+getId (Right Nothing) = 0
 
 getDate :: Either String (Maybe UTCTime) -> String
 getDate (Left error) = error
