@@ -1,6 +1,10 @@
 body {
   background-color: #f9f9f9;
-  color: #333:
+  color: #555:
+}
+
+p {
+  color: #555;
 }
 
 header {
@@ -10,7 +14,7 @@ header {
   margin-bottom: 15px;
   font-size: 2em;
   font-family: "Helvetica";
-  color: #333;
+  color: #555;
 }
 
 header .slogan {
@@ -31,16 +35,16 @@ pre {
 
 .articleline {
   text-align: center;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 header a {
-  color: #333;
+  color: #555;
 }
 
 a {
   text-decoration: none;
-  color: #3D8BFF;
+  color: #a3d069;
 }
 
 a:hover {
@@ -48,16 +52,27 @@ a:hover {
 }
 
 h2 {
-  color: #333;
+  color: #555;
 }
 
 .articleline h5 a {
-  color: #333;
+  color: #555;
 }
 
 .articleline h5 {
   margin-bottom: 3px;
-  font-size: 1.5em;
+  font-size: 1.4em;
   font-style: bold;
   color: #444;
+}
+
+.lineinfo {
+  font-size: 1.0em;
+  color: #666;
+  font-style: bold;
+}
+
+.metadatas {
+  color: #555;
+  font-size: 0.9em;
 }
