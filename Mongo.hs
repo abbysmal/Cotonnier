@@ -61,7 +61,7 @@ queryDocumentWith query = do
 
 queryDocumentsWith query limitation = do
   pipe <- initMongoCo
-  response <- mongoRun pipe $ MongoDB.find (MongoDB.select query "cotons") {limit = limitation} >>= MongoDB.rest
+  response <- mongoRun pipe $ MongoDB.find (MongoDB.select query "cotons") {limit = limitation, sort = ["id" =: -1]} >>= MongoDB.rest
   return response
 
 checkResponse :: Val a => Either Failure (Maybe a) -> Either String a
