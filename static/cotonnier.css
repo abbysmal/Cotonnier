@@ -76,3 +76,60 @@ h2 {
   color: #555;
   font-size: 0.9em;
 }
+
+pre.sourceCode {
+  color: #555;
+}
+
+pre.sourceCode span.kw{
+  color:#366aff;	/* blue */ 
+}
+
+pre.sourceCode span.dt{
+  color:#6683cd;	/* green */
+}
+
+pre.sourceCode span.dv{
+  color:#2975d4;	/* darkblue */
+}
+
+pre.sourceCode span.bn{
+  color:#bee38a;	/* gray */
+}
+
+pre.sourceCode span.fl{
+  color:#b48dd5;	/* purple */
+}
+
+pre.sourceCode span.ch{
+  color:#6bbc1c;		/* green */
+}
+
+pre.sourceCode span.st{
+  color:#9bc1ff;		/* lightblue */
+}
+
+pre.sourceCode span.co{
+  color:#b97aff;		/* darkpurple */
+}
+
+pre.sourceCode span.ot{
+  color:#6bbc1c;		/* lime green */
+}
+
+pre.sourceCode span.al{
+  color:#6683cd;		/* lol */
+}
+
+pre.sourceCode span.fu{
+  color:#5cba01;                /* lime green */
+}
+
+pre.sourceCode span.re{
+  color:#CC0066;
+}
+
+pre.sourceCode span.er{
+  color:#CC0066;
+}
+
