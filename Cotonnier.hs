@@ -8,7 +8,7 @@ import Yesod.Static
 
 data Cotonnier = Cotonnier
   {
-    getStatic	:: Static
+    getStatic :: Static
   }
 
 staticFiles "static"
@@ -23,44 +23,36 @@ mkYesod "Cotonnier" [parseRoutesNoCheck|
 
 instance Yesod Cotonnier
 
-getStaticArticle id = "/home/engil/static/" ++ (show id) ++ "/article.md"
+getStaticArticle id = "/home/engil/static/" ++ show id ++ "/article.md"
 
-getHomeR :: Handler Yesod.RepHtml
-getHomeR = do
-  entries <- Yesod.liftIO $ Mongo.queryDocumentsWith [] 10
+createPage :: GWidget Cotonnier Cotonnier () -> Handler Yesod.RepHtml
+createPage content =
   Yesod.defaultLayout $ do
     setTitle "Cotonnier"
     addStylesheet $ StaticR knacss_css
     addStylesheet $ StaticR cotonnier_css
-    $(Yesod.whamletFile "Home.hamlet")
+    content
+
+getHomeR :: Handler Yesod.RepHtml
+getHomeR = do
+  entries <- Yesod.liftIO $ Mongo.queryDocumentsWith [] 10
+  createPage $(Yesod.whamletFile "Home.hamlet")
 
 getCotonsIdR :: Integer -> Handler Yesod.RepHtml
 getCotonsIdR id = do
   metadatas <- Yesod.liftIO $ Mongo.queryDocumentWith ["id" =: id]
   corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
-  Yesod.defaultLayout $ do
-    setTitle "Cotonnier"
-    addStylesheet $ StaticR knacss_css
-    addStylesheet $ StaticR cotonnier_css
-    $(Yesod.whamletFile "Post.hamlet")
+  createPage $(Yesod.whamletFile "Post.hamlet")
 
 getAuthorR :: String -> Handler Yesod.RepHtml
 getAuthorR author = do
   entries <- Yesod.liftIO $ queryDocumentsWith ["author" =: author] 0
-  Yesod.defaultLayout $ do
-  setTitle "Cotonnier"
-  addStylesheet $ StaticR knacss_css
-  addStylesheet $ StaticR cotonnier_css
-  $(Yesod.whamletFile "Home.hamlet")
+  createPage $(Yesod.whamletFile "Home.hamlet")
 
 getTagsR :: String -> Handler Yesod.RepHtml
 getTagsR tag = do
   entries <- Yesod.liftIO $ queryDocumentsWith ["tags" =: tag] 0
-  Yesod.defaultLayout $ do
-  setTitle "Cotonnier"
-  addStylesheet $ StaticR knacss_css
-  addStylesheet $ StaticR cotonnier_css
-  $(Yesod.whamletFile "Home.hamlet")
+  createPage $(Yesod.whamletFile "Home.hamlet")
 
 main :: IO ()
 main = do
