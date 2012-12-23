@@ -8,7 +8,7 @@ import Yesod.Static
 
 data Cotonnier = Cotonnier
   {
-    getStatic	:: Static
+    getStatic :: Static
   }
 
 staticFiles "static"
