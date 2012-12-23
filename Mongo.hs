@@ -36,7 +36,8 @@ getId (Right Nothing) = 0
 getDate :: Either String (Maybe UTCTime) -> String
 getDate (Left error) = error
 getDate (Right Nothing) = "Value error"
-getDate (Right (Just date)) = Format.formatTime Locale.defaultTimeLocale "%A %e, %B %Y" date
+getDate (Right (Just date)) =
+    Format.formatTime Locale.defaultTimeLocale "%A %e, %B %Y" date
 
 getString :: Either String (Maybe String) -> String
 getString (Left error) = error
@@ -50,7 +51,8 @@ getList (Right (Just list)) = list
 
 getValue :: (Val a) => Either String Document -> Label -> Either String (Maybe a)
 getValue (Left error) _ = Left error
-getValue (Right document) field = Right $ MongoDB.look field document >>= MongoDB.cast'
+getValue (Right document) field =
+    Right $ MongoDB.look field document >>= MongoDB.cast'
 
 queryDocumentWith :: Selector -> IO (Either String Document)
 queryDocumentWith query = do
@@ -61,8 +63,9 @@ queryDocumentWith query = do
 
 queryDocumentsWith query limitation = do
   pipe <- initMongoCo
-  response <- mongoRun pipe $ MongoDB.find (MongoDB.select query "cotons") {limit = limitation, sort = ["id" =: -1]} >>= MongoDB.rest
-  return response
+  let modifier x = x {limit = limitation, sort = ["id" =: -1]}
+      find_cotons = MongoDB.find $ modifier $ MongoDB.select query "cotons"
+  mongoRun pipe $ find_cotons >>= MongoDB.rest
 
 checkResponse :: Val a => Either Failure (Maybe a) -> Either String a
 checkResponse (Left _) = Left "Error while querying MongoDB"
