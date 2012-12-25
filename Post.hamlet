@@ -3,15 +3,20 @@
   <div class="slogan">
     Le blog trop bien
 <div class="line post">
-    <div class="mod left w33p">
-      $with corpus <- Markdown.markdownToHtml corpusmd
-        #{corpus}
-      <div class="metadatas">
-        $with date <- Mongo.getDate $ getValue metadatas "date"
-          Published on #{date}, by 
-        $with author <- Mongo.getString $ getValue metadatas "author"
-          <a href=@{AuthorR author}>#{author} 
-        Tags: 
-        $with tags <- Mongo.getList $ getValue metadatas "tags"
-          $forall tag <- tags
-            <a href=@{TagsR tag}>#{tag}</a>
+    $with id <- Mongo.getId $ getValue metadatas "id"
+      $case id
+        $of 0
+          <p>There is nothing here, move on.
+        $of _
+          <div class="mod left w33p">
+            $with corpus <- Markdown.markdownToHtml corpusmd
+              #{corpus}
+            <div class="metadatas">
+              $with date <- Mongo.getDate $ getValue metadatas "date"
+                Published on #{date}, by 
+              $with author <- Mongo.getString $ getValue metadatas "author"
+                <a href=@{AuthorR author}>#{author} 
+              Tags: 
+              $with tags <- Mongo.getList $ getValue metadatas "tags"
+                $forall tag <- tags
+                  <a href=@{TagsR tag}>#{tag}</a>
