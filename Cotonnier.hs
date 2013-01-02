@@ -6,10 +6,7 @@ import Yesod.Markdown as Markdown
 import Database.MongoDB as MongoDB
 import Yesod.Static
 
-data Cotonnier = Cotonnier
-  {
-    getStatic :: Static
-  }
+data Cotonnier = Cotonnier { getStatic :: Static }
 
 staticFiles "static"
 
@@ -23,7 +20,8 @@ mkYesod "Cotonnier" [parseRoutesNoCheck|
 
 instance Yesod Cotonnier
 
-getStaticArticle id = "/home/engil/static/" ++ show id ++ "/article.md"
+getStaticArticle id = "/home/thomas/dev/Haskell/Cotonnier/articles/" ++
+                      show id ++ "/article.md"
 
 createPage :: GWidget Cotonnier Cotonnier () -> Handler Yesod.RepHtml
 createPage content =

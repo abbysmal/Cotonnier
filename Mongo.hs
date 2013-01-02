@@ -1,17 +1,17 @@
 {-# LANGUAGE OverloadedStrings, ExtendedDefaultRules #-}
 module Mongo(
-initMongoCo
-, mongoRun
-, valueToString
-, queryDocumentWith
-, queryDocumentsWith
-, checkResponse
-, getString
-, getValue
-, getDate
-, getList
-, getId
-) where
+  initMongoCo
+  , mongoRun
+  , valueToString
+  , queryDocumentWith
+  , queryDocumentsWith
+  , checkResponse
+  , getString
+  , getValue
+  , getDate
+  , getList
+  , getId
+  ) where
 
 import Database.MongoDB as MongoDB
 import Data.Maybe as Maybe
