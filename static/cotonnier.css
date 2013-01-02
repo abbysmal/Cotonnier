@@ -81,55 +81,15 @@ pre.sourceCode {
   color: #555;
 }
 
-pre.sourceCode span.kw{
-  color:#366aff;	/* blue */ 
-}
-
-pre.sourceCode span.dt{
-  color:#6683cd;	/* green */
-}
-
-pre.sourceCode span.dv{
-  color:#2975d4;	/* darkblue */
-}
-
-pre.sourceCode span.bn{
-  color:#bee38a;	/* gray */
-}
-
-pre.sourceCode span.fl{
-  color:#b48dd5;	/* purple */
-}
-
-pre.sourceCode span.ch{
-  color:#6bbc1c;		/* green */
-}
-
-pre.sourceCode span.st{
-  color:#9bc1ff;		/* lightblue */
-}
-
-pre.sourceCode span.co{
-  color:#b97aff;		/* darkpurple */
-}
-
-pre.sourceCode span.ot{
-  color:#6bbc1c;		/* lime green */
-}
-
-pre.sourceCode span.al{
-  color:#6683cd;		/* lol */
-}
-
-pre.sourceCode span.fu{
-  color:#5cba01;                /* lime green */
-}
-
-pre.sourceCode span.re{
-  color:#CC0066;
-}
-
-pre.sourceCode span.er{
-  color:#CC0066;
-}
-
+pre.sourceCode span.kw { color: #007020; font-weight: bold; }
+pre.sourceCode span.dt { color: #902000; }
+pre.sourceCode span.dv { color: #40a070; }
+pre.sourceCode span.bn { color: #40a070; }
+pre.sourceCode span.fl { color: #40a070; }
+pre.sourceCode span.ch { color: #4070a0; }
+pre.sourceCode span.st { color: #4070a0; }
+pre.sourceCode span.co { color: #60a0b0; font-style: italic; }
+pre.sourceCode span.ot { color: #007020; }
+pre.sourceCode span.al { color: #ff0000; font-weight: bold; }
+pre.sourceCode span.fu { color: #06287e; }
+pre.sourceCode span.er { color: #ff0000; font-weight: bold; }
