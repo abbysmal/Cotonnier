@@ -19,7 +19,7 @@
               Tags: 
               $with tags <- Mongo.getList $ getValue metadatas "tags"
                 $forall tag <- tags
-                  <a href=@{TagsR tag}>#{tag}</a>
+                  <a href=@{TagsR tag}>#{tag}
             <div class="comments">
               $case comments
                 $of Right commentsdata
