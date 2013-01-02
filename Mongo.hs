@@ -1,17 +1,18 @@
 {-# LANGUAGE OverloadedStrings, ExtendedDefaultRules #-}
 module Mongo(
-initMongoCo
-, mongoRun
-, valueToString
-, queryDocumentWith
-, queryDocumentsWith
-, checkResponse
-, getString
-, getValue
-, getDate
-, getList
-, getId
-) where
+  initMongoCo
+  , mongoRun
+  , valueToString
+  , queryDocumentWith
+  , queryDocumentsWith
+  , queryCommentsWith
+  , checkResponse
+  , getString
+  , getValue
+  , getDate
+  , getList
+  , getId
+  ) where
 
 import Database.MongoDB as MongoDB
 import Data.Maybe as Maybe
@@ -54,18 +55,26 @@ getValue (Left error) _ = Left error
 getValue (Right document) field =
     Right $ MongoDB.look field document >>= MongoDB.cast'
 
-queryDocumentWith :: Selector -> IO (Either String Document)
-queryDocumentWith query = do
+queryDocumentWith :: Selector -> Collection -> IO (Either String Document)
+queryDocumentWith query collection = do
   pipe <- initMongoCo
-  response <- mongoRun pipe $ MongoDB.findOne $ MongoDB.select query "cotons"
+  response <- mongoRun pipe $ 
+              MongoDB.findOne $ 
+              MongoDB.select query collection
   let document = checkResponse response
   return document
 
-queryDocumentsWith query limitation = do
+queryDocumentsWith query collection limitation = do
   pipe <- initMongoCo
   let modifier x = x {limit = limitation, sort = ["id" =: -1]}
-      find_cotons = MongoDB.find $ modifier $ MongoDB.select query "cotons"
+      find_cotons = MongoDB.find $ modifier $ MongoDB.select query collection
   mongoRun pipe $ find_cotons >>= MongoDB.rest
+  
+queryCommentsWith query collection limitation = do
+  pipe <- initMongoCo
+  let modifier x = x {limit = limitation, sort = ["id" =: -1]}
+      find_comments = MongoDB.find $ modifier $ MongoDB.select query collection
+  mongoRun pipe $ find_comments >>= MongoDB.rest
 
 checkResponse :: Val a => Either Failure (Maybe a) -> Either String a
 checkResponse (Left _) = Left "Error while querying MongoDB"

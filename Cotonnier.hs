@@ -6,10 +6,7 @@ import Yesod.Markdown as Markdown
 import Database.MongoDB as MongoDB
 import Yesod.Static
 
-data Cotonnier = Cotonnier
-  {
-    getStatic :: Static
-  }
+data Cotonnier = Cotonnier { getStatic :: Static }
 
 staticFiles "static"
 
@@ -23,7 +20,8 @@ mkYesod "Cotonnier" [parseRoutesNoCheck|
 
 instance Yesod Cotonnier
 
-getStaticArticle id = "/home/engil/static/" ++ show id ++ "/article.md"
+getStaticArticle id = "/home/thomas/dev/Haskell/Cotonnier/articles/" ++
+                      show id ++ "/article.md"
 
 createPage :: GWidget Cotonnier Cotonnier () -> Handler Yesod.RepHtml
 createPage content =
@@ -35,23 +33,24 @@ createPage content =
 
 getHomeR :: Handler Yesod.RepHtml
 getHomeR = do
-  entries <- Yesod.liftIO $ Mongo.queryDocumentsWith [] 10
+  entries <- Yesod.liftIO $ Mongo.queryDocumentsWith [] "cotons" 10
   createPage $(Yesod.whamletFile "Home.hamlet")
 
 getCotonsIdR :: Integer -> Handler Yesod.RepHtml
 getCotonsIdR id = do
-  metadatas <- Yesod.liftIO $ Mongo.queryDocumentWith ["id" =: id]
+  metadatas <- Yesod.liftIO $ Mongo.queryDocumentWith ["id" =: id] "cotons"
+  comments <- Yesod.liftIO $ Mongo.queryCommentsWith ["id" =: id] "com" 20
   corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
   createPage $(Yesod.whamletFile "Post.hamlet")
 
 getAuthorR :: String -> Handler Yesod.RepHtml
 getAuthorR author = do
-  entries <- Yesod.liftIO $ queryDocumentsWith ["author" =: author] 0
+  entries <- Yesod.liftIO $ queryDocumentsWith ["author" =: author] "cotons" 0
   createPage $(Yesod.whamletFile "Home.hamlet")
 
 getTagsR :: String -> Handler Yesod.RepHtml
 getTagsR tag = do
-  entries <- Yesod.liftIO $ queryDocumentsWith ["tags" =: tag] 0
+  entries <- Yesod.liftIO $ queryDocumentsWith ["tags" =: tag] "cotons" 0
   createPage $(Yesod.whamletFile "Home.hamlet")
 
 main :: IO ()
