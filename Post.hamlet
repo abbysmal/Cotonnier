@@ -24,13 +24,14 @@
               $case comments
                 $of Right commentsdata
                   $forall com <- commentsdata
-                    <div class="commentline">  
-                      $with author <- Mongo.getString $ Mongo.getValue (Right com) "author"
-                        <b>#{author}
-                      $with date <- Mongo.getDate $ Mongo.getValue (Right com) "date"
-                        (#{date})
-                      $with content <- Mongo.getString $ Mongo.getValue (Right com) "content"
-                        <div class="commentBody">#{content}
+                    <div class="comment">
+                      <div class="commentline">  
+                        $with author <- Mongo.getString $ Mongo.getValue (Right com) "author"
+                          <b>#{author}
+                        $with date <- Mongo.getDate $ Mongo.getValue (Right com) "date"
+                          (#{date})
+                        $with content <- Mongo.getString $ Mongo.getValue (Right com) "content"
+                          <div class="commentbody">#{content}
                 $of Left _
                   <p>MongoDB error
 

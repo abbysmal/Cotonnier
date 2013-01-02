@@ -93,3 +93,23 @@ pre.sourceCode span.ot { color: #007020; }
 pre.sourceCode span.al { color: #ff0000; font-weight: bold; }
 pre.sourceCode span.fu { color: #06287e; }
 pre.sourceCode span.er { color: #ff0000; font-weight: bold; }
+
+.comments {
+    margin-top: 30px;
+    padding-top: 5px;
+    border-top: 1px #555 solid;
+}
+
+.comment {
+    margin-bottom: 10px;
+}
+
+.commentline {
+    color: #555;
+}
+
+.commentbody {
+    font-size: 0.9em;
+    color: #555;
+    margin-left: 10px;
+}
