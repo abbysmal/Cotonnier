@@ -20,3 +20,17 @@
               $with tags <- Mongo.getList $ getValue metadatas "tags"
                 $forall tag <- tags
                   <a href=@{TagsR tag}>#{tag}</a>
+            <div class="comments">
+              $case comments
+                $of Right commentsdata
+                  $forall com <- commentsdata
+                    <div class="commentline">  
+                      $with author <- Mongo.getString $ Mongo.getValue (Right com) "author"
+                        <b>#{author}
+                      $with date <- Mongo.getDate $ Mongo.getValue (Right com) "date"
+                        (#{date})
+                      $with content <- Mongo.getString $ Mongo.getValue (Right com) "content"
+                        <div class="commentBody">#{content}
+                $of Left _
+                  <p>MongoDB error
+
