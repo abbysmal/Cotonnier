@@ -5,6 +5,7 @@ import Mongo as Mongo
 import Yesod.Markdown as Markdown
 import Database.MongoDB as MongoDB
 import Yesod.Static
+import Data.Text
 
 data Cotonnier = Cotonnier { getStatic :: Static }
 

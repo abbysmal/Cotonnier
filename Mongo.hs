@@ -5,6 +5,7 @@ module Mongo(
   , valueToString
   , queryDocumentWith
   , queryDocumentsWith
+  , insertComment
   , checkResponse
   , getString
   , getValue
@@ -78,7 +79,7 @@ insertComment id' author content = do
   pipe <- initMongoCo
   time <- getCurrentTime
   mongoRun pipe $ MongoDB.insert "com" 
-    [ "id" := Int32 id'
+    [ "id" := val id'
     , "date" := UTC time
     , "author" := String author
     , "content" := String content
