@@ -39,7 +39,7 @@ getHomeR = do
 getCotonsIdR :: Integer -> Handler Yesod.RepHtml
 getCotonsIdR id = do
   metadatas <- Yesod.liftIO $ Mongo.queryDocumentWith ["id" =: id] "cotons"
-  comments <- Yesod.liftIO $ Mongo.queryCommentsWith ["id" =: id] "com" 20
+  comments <- Yesod.liftIO $ Mongo.queryDocumentsWith ["id" =: id] "com" 20
   corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
   createPage $(Yesod.whamletFile "Post.hamlet")
 
