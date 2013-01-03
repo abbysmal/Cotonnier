@@ -80,3 +80,7 @@ checkResponse :: Val a => Either Failure (Maybe a) -> Either String a
 checkResponse (Left _) = Left "Error while querying MongoDB"
 checkResponse (Right Nothing) = Left "Querying return nothing"
 checkResponse (Right (Just a)) = Right a
+
+insertComment id author = do
+  pipe <- initMongoCo
+  
