@@ -81,6 +81,12 @@ checkResponse (Left _) = Left "Error while querying MongoDB"
 checkResponse (Right Nothing) = Left "Querying return nothing"
 checkResponse (Right (Just a)) = Right a
 
-insertComment id author = do
+insertComment id' author content = do
   pipe <- initMongoCo
-  
+  time <- getCurrentTime
+  mongoRun pipe $ MongoDB.insert "com" 
+    [ "id" := Int32 id'
+    , "date" := UTC time
+    , "author" := String author
+    , "content" := String content
+    ]
