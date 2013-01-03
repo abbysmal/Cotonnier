@@ -19,18 +19,23 @@
               Tags: 
               $with tags <- Mongo.getList $ getValue metadatas "tags"
                 $forall tag <- tags
-                  <a href=@{TagsR tag}>#{tag}</a>
+                  <a href=@{TagsR tag}>#{tag}
             <div class="comments">
               $case comments
                 $of Right commentsdata
                   $forall com <- commentsdata
-                    <div class="commentline">  
-                      $with author <- Mongo.getString $ Mongo.getValue (Right com) "author"
-                        <b>#{author}
-                      $with date <- Mongo.getDate $ Mongo.getValue (Right com) "date"
-                        (#{date})
-                      $with content <- Mongo.getString $ Mongo.getValue (Right com) "content"
-                        <div class="commentBody">#{content}
+                    <div class="comment">
+                      <div class="commentline">  
+                        $with author <- Mongo.getString $ Mongo.getValue (Right com) "author"
+                          <b>#{author}
+                        $with date <- Mongo.getDate $ Mongo.getValue (Right com) "date"
+                          (#{date})
+                        $with content <- Mongo.getString $ Mongo.getValue (Right com) "content"
+                          <div class="commentbody">#{content}
                 $of Left _
                   <p>MongoDB error
-
+            <div class="commentform">
+              <h2>Comment :
+              <form method="POST" action=@{CotonsIdR id} enctype=#{enctype}>
+                ^{widget}
+                <input type="submit" value="Submit">

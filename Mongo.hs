@@ -5,7 +5,7 @@ module Mongo(
   , valueToString
   , queryDocumentWith
   , queryDocumentsWith
-  , queryCommentsWith
+  , insertComment
   , checkResponse
   , getString
   , getValue
@@ -69,14 +69,18 @@ queryDocumentsWith query collection limitation = do
   let modifier x = x {limit = limitation, sort = ["id" =: -1]}
       find_cotons = MongoDB.find $ modifier $ MongoDB.select query collection
   mongoRun pipe $ find_cotons >>= MongoDB.rest
-  
-queryCommentsWith query collection limitation = do
-  pipe <- initMongoCo
-  let modifier x = x {limit = limitation, sort = ["id" =: -1]}
-      find_comments = MongoDB.find $ modifier $ MongoDB.select query collection
-  mongoRun pipe $ find_comments >>= MongoDB.rest
 
 checkResponse :: Val a => Either Failure (Maybe a) -> Either String a
 checkResponse (Left _) = Left "Error while querying MongoDB"
 checkResponse (Right Nothing) = Left "Querying return nothing"
 checkResponse (Right (Just a)) = Right a
+
+insertComment id' author content = do
+  pipe <- initMongoCo
+  time <- getCurrentTime
+  mongoRun pipe $ MongoDB.insert "com" 
+    [ "id" := val id'
+    , "date" := UTC time
+    , "author" := String author
+    , "content" := String content
+    ]
