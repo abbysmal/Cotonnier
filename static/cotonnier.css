@@ -1,84 +1,85 @@
 body {
-  background-color: #f9f9f9;
-  color: #555:
+    background-color: #f9f9f9;
+    color: #555:
 }
 
 p {
-  color: #555;
+    color: #555;
 }
 
 header {
-  padding-top: 10px;
-  text-align: center;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
-  font-size: 2em;
-  font-family: "Helvetica";
-  color: #555;
+    padding-top: 10px;
+    text-align: center;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 2em;
+    font-family: "Helvetica";
+    color: #555;
 }
 
 header .slogan {
-  font-size: 0.5em;
-  font-style: italic;
+    font-size: 0.5em;
+    font-style: italic;
 }
 
 .line.post {
-  padding-left: 30%;
-  padding-right: 30%;
+    padding-left: 30%;
+    padding-right: 30%;
 }
 
 pre {
-  background-color: #f1f1f1;
-  border: 1px #e9e9e9 solid;
-  padding: 5px;
+    font-size: 0.9em;
+    background-color: #f1f1f1;
+    border: 1px #e9e9e9 solid;
+    padding: 5px;
 }
 
 .articleline {
-  text-align: center;
-  margin-bottom: 10px;
+    text-align: center;
+    margin-bottom: 10px;
 }
 
 header a {
-  color: #555;
+    color: #555;
 }
 
 a {
-  text-decoration: none;
-  color: #a3d069;
+    text-decoration: none;
+    color: #a3d069;
 }
 
 a:hover {
-  color: #3d3d3d;
+    color: #3d3d3d;
 }
 
 h2 {
-  color: #555;
+    color: #555;
 }
 
 .articleline h5 a {
-  color: #555;
+    color: #555;
 }
 
 .articleline h5 {
-  margin-bottom: 3px;
-  font-size: 1.4em;
-  font-style: bold;
-  color: #444;
+    margin-bottom: 3px;
+    font-size: 1.4em;
+    font-style: bold;
+    color: #444;
 }
 
 .lineinfo {
-  font-size: 1.0em;
-  color: #666;
-  font-style: bold;
+    font-size: 1.0em;
+    color: #666;
+    font-style: bold;
 }
 
 .metadatas {
-  color: #555;
-  font-size: 0.9em;
+    color: #555;
+    font-size: 0.9em;
 }
 
 pre.sourceCode {
-  color: #555;
+    color: #555;
 }
 
 pre.sourceCode span.kw { color: #007020; font-weight: bold; }
@@ -93,3 +94,23 @@ pre.sourceCode span.ot { color: #007020; }
 pre.sourceCode span.al { color: #ff0000; font-weight: bold; }
 pre.sourceCode span.fu { color: #06287e; }
 pre.sourceCode span.er { color: #ff0000; font-weight: bold; }
+
+.comments {
+    margin-top: 30px;
+    padding-top: 5px;
+    border-top: 1px #555 solid;
+}
+
+.comment {
+    margin-bottom: 10px;
+}
+
+.commentline {
+    color: #555;
+}
+
+.commentbody {
+    font-size: 0.9em;
+    color: #555;
+    margin-left: 10px;
+}
