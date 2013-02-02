@@ -74,11 +74,7 @@ postCotonsIdR id = do
         Yesod.liftIO $ Mongo.insertComment id (name comment) (content comment)
               >> return ()
     _ -> return ()
-  corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
-  metadatas <- Yesod.liftIO $ Mongo.queryDocumentWith ["id" =: id] "cotons"
-  comments <- Yesod.liftIO $ Mongo.queryDocumentsWith ["id" =: id] "com" 20
-  (widget, enctype) <- Yesod.generateFormPost commentForm
-  createPage $(Yesod.whamletFile "Post.hamlet")
+  getCotonsIdR id
 
 getAuthorR :: String -> Handler Yesod.RepHtml
 getAuthorR author = do
