@@ -7,18 +7,18 @@
       $of Right metadatas
         $forall entry <- metadatas
           <div class="articleline">
-            $with title <- Mongo.getString $ Mongo.getValue (Right entry) "title"
-              $with id <- Mongo.getId $ Mongo.getValue (Right entry) "id"
+            $with title <- Mongo.getString entry "title"
+              $with id <- Mongo.getId entry "id"
                 <h5>
                   <a href=@{CotonsIdR id}>#{title}</a>
               <div class="lineinfo">
-                $with date <- Mongo.getDate $ Mongo.getValue (Right entry) "date"
-                  Published on #{date} 
-                $with author <- Mongo.getString $ Mongo.getValue (Right entry) "author"
-                    by <a href=@{AuthorR author}>#{author}</a> 
-                $with tags <- Mongo.getList $ Mongo.getValue (Right entry) "tags"
-                    Tags: 
+                $with date <- Mongo.getDate entry "date"
+                  Published on #{date}
+                $with author <- Mongo.getString entry "author"
+                    by <a href=@{AuthorR author}>#{author}</a>
+                $with tags <- Mongo.getList entry "tags"
+                    Tags:
                   $forall tag <- tags
-                      <a href=@{TagsR tag}>#{tag}</a> 
+                      <a href=@{TagsR tag}>#{tag}</a>
       $of Left _
         <p>MongoDB error

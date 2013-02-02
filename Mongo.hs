@@ -8,7 +8,6 @@ module Mongo(
   , insertComment
   , checkResponse
   , getString
-  , getValue
   , getDate
   , getList
   , getId
@@ -33,31 +32,23 @@ valueToString :: Maybe String -> String
 valueToString (Just a) = a
 valueToString Nothing = "Error xd"
 
-getId :: Either String (Maybe Integer) -> Integer
-getId (Left error) = 0
-getId (Right (Just a)) = a
-getId (Right Nothing) = 0
+getId :: Document -> Label -> Integer
+getId = getValue 0 id
 
-getDate :: Either String (Maybe UTCTime) -> String
-getDate (Left error) = error
-getDate (Right Nothing) = "Value error"
-getDate (Right (Just date)) =
-    Format.formatTime Locale.defaultTimeLocale "%A %e, %B %Y" date
+getDate :: Document -> Label -> String
+getDate =
+    let f = Format.formatTime Locale.defaultTimeLocale in
+    getValue "Value error" $ \x -> f "%A %e, %B %Y" (x :: UTCTime)
 
-getString :: Either String (Maybe String) -> String
-getString (Left error) = error
-getString (Right Nothing) = "Value error"
-getString (Right (Just value)) = value
+getString :: Document -> Label -> String
+getString = getValue "Value error" id
 
-getList :: Either String (Maybe [String]) -> [String]
-getList (Left error) = [error]
-getList (Right Nothing) = ["Value error"]
-getList (Right (Just list)) = list
+getList :: Document -> Label -> [String]
+getList = getValue ["Value error"] id
 
-getValue :: (Val a) => Either String Document -> Label -> Either String (Maybe a)
-getValue (Left error) _ = Left error
-getValue (Right document) field =
-    Right $ MongoDB.look field document >>= MongoDB.cast'
+getValue :: Val a => b -> (a -> b) -> Document -> Label -> b
+getValue defaultValue f document field =
+    Maybe.maybe defaultValue f $ MongoDB.look field document >>= MongoDB.cast'
 
 queryDocumentWith :: Selector -> Collection -> IO (Either String Document)
 queryDocumentWith query collection = do

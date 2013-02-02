@@ -3,39 +3,43 @@
   <div class="slogan">
     Le blog trop bien
 <div class="line post">
-    $with id <- Mongo.getId $ getValue metadatas "id"
-      $case id
-        $of 0
-          <p>There is nothing here, move on.
-        $of _
-          <div class="mod left w33p">
-            $with corpus <- Markdown.markdownToHtml corpusmd
-              #{corpus}
-            <div class="metadatas">
-              $with date <- Mongo.getDate $ getValue metadatas "date"
-                Published on #{date}, by 
-              $with author <- Mongo.getString $ getValue metadatas "author"
-                <a href=@{AuthorR author}>#{author} 
-              Tags: 
-              $with tags <- Mongo.getList $ getValue metadatas "tags"
-                $forall tag <- tags
-                  <a href=@{TagsR tag}>#{tag}
-            <div class="comments">
-              $case comments
-                $of Right commentsdata
-                  $forall com <- commentsdata
-                    <div class="comment">
-                      <div class="commentline">  
-                        $with author <- Mongo.getString $ Mongo.getValue (Right com) "author"
-                          <b>#{author}
-                        $with date <- Mongo.getDate $ Mongo.getValue (Right com) "date"
-                          (#{date})
-                        $with content <- Mongo.getString $ Mongo.getValue (Right com) "content"
-                          <div class="commentbody">#{content}
-                $of Left _
-                  <p>MongoDB error
-            <div class="commentform">
-              <h2>Comment :
-              <form method="POST" action=@{CotonsIdR id} enctype=#{enctype}>
-                ^{widget}
-                <input type="submit" value="Submit">
+    $case metadatas
+      $of Right metadatas
+        $with id <- Mongo.getId metadatas "id"
+          $case id
+            $of 0
+              <p>There is nothing here, move on.
+            $of _
+              <div class="mod left w33p">
+                $with corpus <- Markdown.markdownToHtml corpusmd
+                  #{corpus}
+                <div class="metadatas">
+                  $with date <- Mongo.getDate metadatas "date"
+                    Published on #{date}, by
+                  $with author <- Mongo.getString metadatas "author"
+                    <a href=@{AuthorR author}>#{author}
+                  Tags:
+                  $with tags <- Mongo.getList metadatas "tags"
+                    $forall tag <- tags
+                      <a href=@{TagsR tag}>#{tag}
+                <div class="comments">
+                  $case comments
+                    $of Right commentsdata
+                      $forall com <- commentsdata
+                        <div class="comment">
+                          <div class="commentline">
+                            $with author <- Mongo.getString com "author"
+                              <b>#{author}
+                            $with date <- Mongo.getDate com "date"
+                              (#{date})
+                            $with content <- Mongo.getString com "content"
+                              <div class="commentbody">#{content}
+                    $of Left _
+                      <p>MongoDB error
+                <div class="commentform">
+                  <h2>Comment :
+                  <form method="POST" action=@{CotonsIdR id} enctype=#{enctype}>
+                    ^{widget}
+                    <input type="submit" value="Submit">
+      $of Left _
+        <p>MongoDB error
