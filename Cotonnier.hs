@@ -25,6 +25,7 @@ instance Yesod Cotonnier
 instance RenderMessage Cotonnier FormMessage where
     renderMessage _ _ = defaultFormMessage
 
+getStaticArticle :: Show a => a -> String
 getStaticArticle id = "/home/thomas/dev/Haskell/Cotonnier/articles/" ++
                       show id ++ "/article.md"
 

@@ -20,9 +20,13 @@ import Control.Monad.Trans (liftIO)
 import System.Locale as Locale
 import Data.Time
 import Data.Time.Format as Format
+import GHC.Word (Word32)
+import Data.Text (Text)
 
+initMongoCo :: IO Pipe
 initMongoCo = runIOE $ MongoDB.connect $ MongoDB.host "127.0.0.1"
 
+mongoRun :: Pipe -> Action IO a -> IO (Either Failure a)
 mongoRun pipe = MongoDB.access pipe MongoDB.master "cotonnier"
 
 valueToString :: Maybe String -> String
@@ -64,6 +68,7 @@ queryDocumentWith query collection = do
   let document = checkResponse response
   return document
 
+queryDocumentsWith :: [Field] -> Text -> Word32 -> IO (Either Failure [Document])
 queryDocumentsWith query collection limitation = do
   pipe <- initMongoCo
   let modifier x = x {limit = limitation, sort = ["id" =: -1]}
@@ -75,6 +80,7 @@ checkResponse (Left _) = Left "Error while querying MongoDB"
 checkResponse (Right Nothing) = Left "Querying return nothing"
 checkResponse (Right (Just a)) = Right a
 
+insertComment :: Val a => a -> Text -> Text -> IO (Either Failure Value)
 insertComment id' author content = do
   pipe <- initMongoCo
   time <- getCurrentTime
