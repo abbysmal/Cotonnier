@@ -1,18 +1,20 @@
 {-# LANGUAGE TypeFamilies, QuasiQuotes, MultiParamTypeClasses, TemplateHaskell, OverloadedStrings, ExtendedDefaultRules #-}
 
-import Yesod as Yesod
-import Mongo as Mongo
-import Yesod.Markdown as Markdown
-import Database.MongoDB as MongoDB
-import Yesod.Static
 import Control.Applicative ((<$>), (<*>))
-import Data.Text
+import Database.MongoDB ((=:))
+import Yesod.Static (StaticRoute, Route(StaticRoute), Static, static)
+import qualified Yesod as Yesod
+import qualified Yesod.Static as Static
+import qualified Mongo as Mongo
+import qualified Yesod.Markdown as Markdown
+import qualified Database.MongoDB as MongoDB
+import qualified Data.Text as Text
 
-data Cotonnier = Cotonnier { getStatic :: Static }
+data Cotonnier = Cotonnier { getStatic :: Static.Static }
 
-staticFiles "static"
+Static.staticFiles "static"
 
-mkYesod "Cotonnier" [parseRoutesNoCheck|
+Yesod.mkYesod "Cotonnier" [Yesod.parseRoutesNoCheck|
 / HomeR GET
 /#Integer CotonsIdR GET POST
 /author/#String AuthorR GET
@@ -20,21 +22,21 @@ mkYesod "Cotonnier" [parseRoutesNoCheck|
 /static    StaticR Static getStatic
 |]
 
-instance Yesod Cotonnier
+instance Yesod.Yesod Cotonnier
 
-instance RenderMessage Cotonnier FormMessage where
-    renderMessage _ _ = defaultFormMessage
+instance Yesod.RenderMessage Cotonnier Yesod.FormMessage where
+    renderMessage _ _ = Yesod.defaultFormMessage
 
 getStaticArticle :: Show a => a -> String
 getStaticArticle id = "/home/thomas/dev/Haskell/Cotonnier/articles/" ++
                       show id ++ "/article.md"
 
-createPage :: GWidget Cotonnier Cotonnier () -> Handler Yesod.RepHtml
+createPage :: Yesod.GWidget Cotonnier Cotonnier () -> Handler Yesod.RepHtml
 createPage content =
   Yesod.defaultLayout $ do
-    setTitle "Cotonnier"
-    addStylesheet $ StaticR knacss_css
-    addStylesheet $ StaticR cotonnier_css
+    Yesod.setTitle "Cotonnier"
+    Yesod.addStylesheet $ StaticR knacss_css
+    Yesod.addStylesheet $ StaticR cotonnier_css
     content
 
 getHomeR :: Handler Yesod.RepHtml
@@ -43,47 +45,52 @@ getHomeR = do
   createPage $(Yesod.whamletFile "Home.hamlet")
 
 data Comment = Comment
-               { name :: Text
-               , content :: Text
+               { name :: Text.Text
+               , content :: Text.Text
                } deriving Show
 
-commentForm :: Html -> MForm Cotonnier Cotonnier (FormResult Comment, Widget)
-commentForm = renderDivs $ Comment
-              <$> areq textField "Name" Nothing
-              <*> areq textField "Content" Nothing
+commentForm :: Yesod.Html ->
+               Yesod.MForm
+                    Cotonnier
+                    Cotonnier
+                    (Yesod.FormResult Comment, Widget)
+commentForm = Yesod.renderDivs $ Comment
+              <$> Yesod.areq Yesod.textField "Name" Nothing
+              <*> Yesod.areq Yesod.textField "Content" Nothing
 
 getCotonsIdR :: Integer -> Handler Yesod.RepHtml
 getCotonsIdR id = do
   corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
   metadatas <- Yesod.liftIO $ Mongo.queryDocumentWith ["id" =: id] "cotons"
   comments <- Yesod.liftIO $ Mongo.queryDocumentsWith ["id" =: id] "com" 20
-  (widget, enctype) <- generateFormPost commentForm
+  (widget, enctype) <- Yesod.generateFormPost commentForm
   createPage $(Yesod.whamletFile "Post.hamlet")
 
 postCotonsIdR :: Integer -> Handler Yesod.RepHtml
 postCotonsIdR id = do
-  ((result, _), _) <- runFormPost commentForm
+  ((result, _), _) <- Yesod.runFormPost commentForm
   Yesod.liftIO $ case result of
-    FormSuccess comment ->
-      insertComment id (name comment) (content comment)
-    _ -> return $ Left $ QueryFailure 42 "Fail." -- FIXME
+    Yesod.FormSuccess comment ->
+      Mongo.insertComment id (name comment) (content comment)
+    _ -> return $ Left $ MongoDB.QueryFailure 42 "Fail." -- FIXME
   corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
   metadatas <- Yesod.liftIO $ Mongo.queryDocumentWith ["id" =: id] "cotons"
   comments <- Yesod.liftIO $ Mongo.queryDocumentsWith ["id" =: id] "com" 20
-  (widget, enctype) <- generateFormPost commentForm
+  (widget, enctype) <- Yesod.generateFormPost commentForm
   createPage $(Yesod.whamletFile "Post.hamlet")
 
 getAuthorR :: String -> Handler Yesod.RepHtml
 getAuthorR author = do
-  entries <- Yesod.liftIO $ queryDocumentsWith ["author" =: author] "cotons" 0
+  entries <- Yesod.liftIO
+                    $ Mongo.queryDocumentsWith ["author" =: author] "cotons" 0
   createPage $(Yesod.whamletFile "Home.hamlet")
 
 getTagsR :: String -> Handler Yesod.RepHtml
 getTagsR tag = do
-  entries <- Yesod.liftIO $ queryDocumentsWith ["tags" =: tag] "cotons" 0
+  entries <- Yesod.liftIO $ Mongo.queryDocumentsWith ["tags" =: tag] "cotons" 0
   createPage $(Yesod.whamletFile "Home.hamlet")
 
 main :: IO ()
 main = do
-  static@ (Static settings) <- static "static"
+  static@ (Static.Static settings) <- static "static"
   Yesod.warpDebug 3000 $ Cotonnier static
