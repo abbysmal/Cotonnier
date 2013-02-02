@@ -69,10 +69,11 @@ getCotonsIdR id = do
 postCotonsIdR :: Integer -> Handler Yesod.RepHtml
 postCotonsIdR id = do
   ((result, _), _) <- Yesod.runFormPost commentForm
-  Yesod.liftIO $ case result of
+  case result of
     Yesod.FormSuccess comment ->
-      Mongo.insertComment id (name comment) (content comment)
-    _ -> return $ Left $ MongoDB.QueryFailure 42 "Fail." -- FIXME
+        Yesod.liftIO $ Mongo.insertComment id (name comment) (content comment)
+              >> return ()
+    _ -> return ()
   corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
   metadatas <- Yesod.liftIO $ Mongo.queryDocumentWith ["id" =: id] "cotons"
   comments <- Yesod.liftIO $ Mongo.queryDocumentsWith ["id" =: id] "com" 20
