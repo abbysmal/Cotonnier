@@ -69,7 +69,7 @@ getCotonsIdR id = do
 postCotonsIdR :: Integer -> Handler Yesod.RepHtml
 postCotonsIdR id = do
   ((result, _), _) <- Yesod.runFormPost commentForm
-  case result of
+  case result of -- Ignoring all errors
     Yesod.FormSuccess comment ->
         Yesod.liftIO $ Mongo.insertComment id (name comment) (content comment)
               >> return ()
