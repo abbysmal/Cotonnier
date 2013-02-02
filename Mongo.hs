@@ -58,8 +58,8 @@ getValue (Right document) field =
 queryDocumentWith :: Selector -> Collection -> IO (Either String Document)
 queryDocumentWith query collection = do
   pipe <- initMongoCo
-  response <- mongoRun pipe $ 
-              MongoDB.findOne $ 
+  response <- mongoRun pipe $
+              MongoDB.findOne $
               MongoDB.select query collection
   let document = checkResponse response
   return document
@@ -78,7 +78,7 @@ checkResponse (Right (Just a)) = Right a
 insertComment id' author content = do
   pipe <- initMongoCo
   time <- getCurrentTime
-  mongoRun pipe $ MongoDB.insert "com" 
+  mongoRun pipe $ MongoDB.insert "com"
     [ "id" := val id'
     , "date" := UTC time
     , "author" := String author

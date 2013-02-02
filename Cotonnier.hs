@@ -41,7 +41,7 @@ getHomeR = do
   entries <- Yesod.liftIO $ Mongo.queryDocumentsWith [] "cotons" 10
   createPage $(Yesod.whamletFile "Home.hamlet")
 
-data Comment = Comment 
+data Comment = Comment
                { name :: Text
                , content :: Text
                } deriving Show
@@ -63,7 +63,7 @@ postCotonsIdR :: Integer -> Handler Yesod.RepHtml
 postCotonsIdR id = do
   ((result, _), _) <- runFormPost commentForm
   Yesod.liftIO $ case result of
-    FormSuccess comment -> 
+    FormSuccess comment ->
       insertComment id (name comment) (content comment)
     _ -> return $ Left $ QueryFailure 42 "Fail." -- FIXME
   corpusmd <- Yesod.liftIO $ Markdown.markdownFromFile (getStaticArticle id)
@@ -71,7 +71,7 @@ postCotonsIdR id = do
   comments <- Yesod.liftIO $ Mongo.queryDocumentsWith ["id" =: id] "com" 20
   (widget, enctype) <- generateFormPost commentForm
   createPage $(Yesod.whamletFile "Post.hamlet")
-  
+
 getAuthorR :: String -> Handler Yesod.RepHtml
 getAuthorR author = do
   entries <- Yesod.liftIO $ queryDocumentsWith ["author" =: author] "cotons" 0
