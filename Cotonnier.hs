@@ -32,7 +32,6 @@ getStaticArticle :: Show a => a -> String
 getStaticArticle id = "/articles/paths/" ++
                       show id ++ "/article.md"
 
-createPage :: Yesod.GWidget Cotonnier Cotonnier () -> Handler Yesod.RepHtml
 createPage content =
   Yesod.defaultLayout $ do
     Yesod.setTitle "Cotonnier"
@@ -50,11 +49,6 @@ data Comment = Comment
                , content :: Text.Text
                } deriving Show
 
-commentForm :: Yesod.Html ->
-               Yesod.MForm
-                    Cotonnier
-                    Cotonnier
-                    (Yesod.FormResult Comment, Widget)
 commentForm = Yesod.renderDivs $ Comment
               <$> Yesod.areq Yesod.textField "Name" Nothing
               <*> Yesod.areq Yesod.textField "Content" Nothing
@@ -91,4 +85,4 @@ getTagsR tag = do
 main :: IO ()
 main = do
   static@ (Static.Static settings) <- static "static"
-  Yesod.warpDebug 3000 $ Cotonnier static
+  Yesod.warp 3000 $ Cotonnier static
