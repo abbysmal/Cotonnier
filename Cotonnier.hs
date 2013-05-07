@@ -9,14 +9,15 @@ import qualified Mongo as Mongo
 import qualified Yesod.Markdown as Markdown
 import qualified Database.MongoDB as MongoDB
 import qualified Data.Text as Text
+import Yesod (parseRoutes)
 
 data Cotonnier = Cotonnier { getStatic :: Static.Static }
 
 Static.staticFiles "static"
 
-Yesod.mkYesod "Cotonnier" [Yesod.parseRoutesNoCheck|
+Yesod.mkYesod "Cotonnier" [parseRoutes|
 / HomeR GET
-/#Integer CotonsIdR GET POST
+/post/#Integer CotonsIdR GET POST
 /author/#String AuthorR GET
 /tags/#String TagsR GET
 /static    StaticR Static getStatic
