@@ -29,7 +29,7 @@ instance Yesod.RenderMessage Cotonnier Yesod.FormMessage where
     renderMessage _ _ = Yesod.defaultFormMessage
 
 getStaticArticle :: Show a => a -> String
-getStaticArticle id = "/home/thomas/dev/Haskell/Cotonnier/articles/" ++
+getStaticArticle id = "/articles/paths/" ++
                       show id ++ "/article.md"
 
 createPage :: Yesod.GWidget Cotonnier Cotonnier () -> Handler Yesod.RepHtml
