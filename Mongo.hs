@@ -21,6 +21,7 @@ import qualified Data.Time as Time
 import qualified Data.Time.Format as Format
 import qualified GHC.Word as Word
 import qualified Data.Text as Text
+import qualified Yesod as Yesod
 
 initMongoCo :: IO DB.Pipe
 initMongoCo = DB.runIOE $ DB.connect $ DB.host "127.0.0.1"
@@ -78,7 +79,7 @@ checkResponse (Right (Just a)) = Right a
 insertComment :: DB.Val a =>
                  a ->
                  Text.Text ->
-                 Text.Text ->
+                 Yesod.Textarea ->
                  IO (Either DB.Failure DB.Value)
 insertComment id' author content = do
   pipe <- initMongoCo
@@ -87,5 +88,5 @@ insertComment id' author content = do
     [ "id" := DB.val id'
     , "date" := DB.UTC time
     , "author" := DB.String author
-    , "content" := DB.String content
+    , "content" := DB.String (Yesod.unTextarea content)
     ]

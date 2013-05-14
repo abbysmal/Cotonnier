@@ -46,12 +46,12 @@ getHomeR = do
 
 data Comment = Comment
                { name :: Text.Text
-               , content :: Text.Text
+               , content :: Yesod.Textarea
                } deriving Show
 
 commentForm = Yesod.renderDivs $ Comment
               <$> Yesod.areq Yesod.textField "Name" Nothing
-              <*> Yesod.areq Yesod.textField "Content" Nothing
+              <*> Yesod.areq Yesod.textareaField "Content" Nothing
 
 getCotonsIdR :: Integer -> Handler Yesod.RepHtml
 getCotonsIdR id = do
