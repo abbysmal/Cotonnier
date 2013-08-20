@@ -1,4 +1,7 @@
-{-# LANGUAGE TypeFamilies, QuasiQuotes, MultiParamTypeClasses, TemplateHaskell, OverloadedStrings, ExtendedDefaultRules #-}
+{-# LANGUAGE TypeFamilies, QuasiQuotes #-}
+{-# LANGUAGE MultiParamTypeClasses, TemplateHaskell #-}
+{-# LANGUAGE OverloadedStrings, ExtendedDefaultRules #-}
+{-# LANGUAGE StandaloneDeriving, GeneralizedNewtypeDeriving #-}
 
 import Control.Applicative ((<$>), (<*>))
 import Database.MongoDB ((=:))
