@@ -21,4 +21,4 @@
                   $forall tag <- tags
                       <a href=@{TagsR tag}>#{tag}</a>
       $of Left _
-        <p>MongoDB error
+        <p>Not Found
