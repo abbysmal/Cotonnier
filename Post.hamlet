@@ -22,6 +22,7 @@
                   $with tags <- Mongo.getList metadatas "tags"
                     $forall tag <- tags
                       <a href=@{TagsR tag}>#{tag}
+                  <a href=@{EpubR id }>#{"Exporter en EPUB"}
                 <div class="comments">
                   $case comments
                     $of Right commentsdata

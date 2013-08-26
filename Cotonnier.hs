@@ -30,10 +30,10 @@ Static.staticFiles "static"
 Yesod.mkYesod "Cotonnier" [parseRoutes|
 / HomeR GET
 /post/#Integer CotonsIdR GET POST
+/post/#Integer/export.epub EpubR GET
 /author/#String AuthorR GET
 /tags/#String TagsR GET
 /static    StaticR Static getStatic
-/epub EpubR GET
 |]
 
 instance Yesod.Yesod Cotonnier
@@ -134,9 +134,9 @@ getTagsR tag = do
   entries <- Yesod.liftIO $ Mongo.queryDocumentsWith ["tags" =: tag] "cotons" 0
   createPage $(Yesod.whamletFile "Home.hamlet")
 
-getEpubR :: Handler RepEpub
-getEpubR = do
-  document <- Yesod.liftIO $ readMarkdownFromFile 1
+getEpubR :: Integer -> Handler RepEpub
+getEpubR id = do
+  document <- Yesod.liftIO $ readMarkdownFromFile id
   (epubToRepEpub document)
 
 
